@@ -79,7 +79,7 @@ def get_calibration_value(string: str) -> int:
 
 def run() -> None:
     '''Runs the program'''
-    file = open('Day 1/day1.txt', 'r')
+    file = open('Day 01/day1.txt', 'r')
     sum = 0
     for line in file:
         sum += get_calibration_value(line)
