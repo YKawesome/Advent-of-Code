@@ -76,22 +76,42 @@ def get_all_numbers_with_starting_index(line: str) -> list[IndexValueLength]:
         return []
 
 
-f = open('Day 03/day3.txt', 'r')
-line_list = []
-for line in f:
-    line_list.append(line.strip())
+def get_lines() -> list[str]:
+    '''Returns a list of all the lines in the file'''
+    f = open('Day 03/day3.txt', 'r')
+    line_list = []
+    for line in f:
+        line_list.append(line.strip())
+    return line_list
 
 
-# print(get_all_numbers_with_starting_index(line_list[9]))
-nums = []
-for i in range(len(line_list)):
-    line = line_list[i]
-
-    ivls = get_all_numbers_with_starting_index(line)
-    for j in range(len(ivls)):
-        for k in range(ivls[j].length):
-            if symbol_adjacent_to_digit(line_list, (i, ivls[j].index + k)):
-                value = ivls[j].value
-                if value not in nums:
+def get_nums_list(line_list: list[str]) -> list[int]:
+    '''Returns a list of all the numbers in the line list'''
+    nums_list = []
+    for i in range(len(line_list)):
+        line = line_list[i]
+        nums = []
+        ivls = get_all_numbers_with_starting_index(line)
+        for j in range(len(ivls)):
+            x = False
+            for k in range(ivls[j].length):
+                if symbol_adjacent_to_digit(line_list, (i, ivls[j].index + k)):
+                    x = True
+                if x:
+                    value = ivls[j].value
+                    # print(value)
                     nums.append(value)
-print(sum(nums))
+                    break
+        nums_list.extend(nums)
+    return nums_list
+
+
+def run() -> None:
+    '''Runs the program'''
+    line_list = get_lines()
+    nums_list = get_nums_list(line_list)
+    print(sum(nums_list))
+
+
+if __name__ == '__main__':
+    run()
