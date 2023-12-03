@@ -3,38 +3,6 @@ from collections import namedtuple
 IndexValueLength = namedtuple('IndexValue', ['index', 'value', 'length'])
 
 
-def symbol_adjacent_to_digit(line_list: list[str], index: tuple[int, int]):
-    '''Returns True if any symbol is adjacent to the digit, even diagonally'''
-    row = index[0]
-    col = index[1]
-    t = False
-    tr = False
-    r = False
-    br = False
-    b = False
-    bl = False
-    l = False
-    tl = False
-    if row > 0:
-        t = line_list[row - 1][col] != '.' and not line_list[row - 1][col].isdigit() and line_list[row - 1][col] == '*'
-        if col > 0:
-            tl = line_list[row - 1][col - 1] != '.' and not line_list[row - 1][col - 1].isdigit() and line_list[row - 1][col - 1] == '*'
-        if col < len(line_list[row]) - 1:
-            tr = line_list[row - 1][col + 1] != '.' and not line_list[row - 1][col + 1].isdigit() and line_list[row - 1][col + 1] == '*'
-    if col > 0:
-        l = line_list[row][col - 1] != '.' and not line_list[row][col - 1].isdigit() and line_list[row][col - 1] == '*'
-    if col < len(line_list[row]) - 1:
-        r = line_list[row][col + 1] != '.' and not line_list[row][col + 1].isdigit() and line_list[row][col + 1] == '*'
-    if row < len(line_list) - 1:
-        b = line_list[row + 1][col] != '.' and not line_list[row + 1][col].isdigit() and line_list[row + 1][col] == '*'
-        if col > 0:
-            bl = line_list[row + 1][col - 1] != '.' and not line_list[row + 1][col - 1].isdigit() and line_list[row + 1][col - 1] == '*'
-        if col < len(line_list[row]) - 1:
-            br = line_list[row + 1][col + 1] != '.' and not line_list[row + 1][col + 1].isdigit() and line_list[row + 1][col + 1] == '*'
-
-    return t or tr or r or br or b or bl or l or tl
-
-
 def get_all_numbers_with_starting_index(line: str) -> list[IndexValueLength]:
     '''Returns all numbers in a line with their starting index'''
     numsstr = ''
