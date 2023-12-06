@@ -36,69 +36,57 @@ def get_seeds(lines: list) -> list[range]:
         i += 1
 
     ranges = [range(i[0], i[0] + i[1]) for i in ranges]
-    # s = set()
-    # for r in ranges:
-    #     print(r)
-    #     s.update(r)
-    # seeds = []
-
-    # for i in s:
-    #     print(i)
 
     del lines[0]
     del lines[0]
     return ranges
 
 
+def get_ranges(mappings_list: list[Mapping], old_ranges: list[range]) -> list[range]:
+    '''Returns a list of ranges'''
+    ranges = []
+    remainders = []
+
+    for ran in old_ranges:
+        for mapping in mappings_list:
+            offset = mapping.dest_range_start - mapping.source_range_start
+            if ran.start >= mapping.source_range_start and ran.stop <= mapping.source_range_start + mapping.range_length:
+                ranges.append(range(ran.start + offset, ran.stop + offset))
+            elif ran.start < mapping.source_range_start and ran.stop < mapping.source_range_start:
+                remainders.append(range(ran.start, ran.stop))
+            elif ran.start > mapping.source_range_start + mapping.range_length and ran.stop > mapping.source_range_start + mapping.range_length:
+                remainders.append(range(ran.start, ran.stop))
+            elif ran.start < mapping.source_range_start and ran.stop > mapping.source_range_start + mapping.range_length:
+                ranges.append(range(mapping.source_range_start + offset, mapping.source_range_start + mapping.range_length + offset))
+                remainders.append(range(ran.start, mapping.source_range_start))
+                remainders.append(range(mapping.source_range_start + mapping.range_length, ran.stop))
+            elif ran.start > mapping.source_range_start and ran.stop > mapping.source_range_start + mapping.range_length:
+                ranges.append(range(ran.start + offset, mapping.source_range_start + mapping.range_length + offset))
+                remainders.append(range(mapping.source_range_start + mapping.range_length, ran.stop))
+            elif ran.start < mapping.source_range_start and ran.stop < mapping.source_range_start + mapping.range_length:
+                ranges.append(range(mapping.source_range_start + offset, ran.stop + offset))
+                remainders.append(range(ran.start, mapping.source_range_start))
+    if ranges == []:
+        return old_ranges
+    return ranges
+
+
 def run() -> None:
     '''Runs the program'''
-    with open('Day 05/day5input.txt', 'r') as f:
+    with open('Day 05/day5test.txt', 'r') as f:
         data = f.read().splitlines()
 
     seeds = get_seeds(data)
     data = process_data(data)
 
-    # seed_to_soil, soil_to_fertilizer, fertilizer_to_water, water_to_light, \
-    #     light_to_temperature, temperature_to_humidity, humidity_to_location = data
+    # seed_to_soil = data[0]
 
-    # mappings = [
-    #     seed_to_soil,
-    #     soil_to_fertilizer,
-    #     fertilizer_to_water,
-    #     water_to_light,
-    #     light_to_temperature,
-    #     temperature_to_humidity,
-    #     humidity_to_location
-    # ]
-    # print(seeds)
-    # print(data)
-    data.reverse()
-    # print(data)
-    # print(min(map(lambda x: map_seed_to_location(x, mappings), seeds)))
-    min = 10_000_000_000
-    print('starting up')
-    for seed_range in seeds:
-        i = 0
-        print(seed_range)
-        while True:
-            if seed_range.start <= map_location_to_seed(i, data) < seed_range.stop:
-                if i < min:
-                    min = i
-                break
-            i += 1
-            if i % 100_000 == 0:
-                print(i)
-    print(min)
-
-
-def map_location_to_seed(location: int, mappings: list[list[Mapping]]) -> int:
-    '''Maps a location to a seed'''
-    for m in mappings:
-        for mapping in m:
-            if mapping.dest_range_start <= location <= mapping.dest_range_start + mapping.range_length:
-                location -= mapping.dest_range_start - mapping.source_range_start
-                break
-    return location
+    old_ranges = seeds
+    for mappings in data:
+        print(old_ranges)
+        new_ranges = get_ranges(mappings, old_ranges)
+        old_ranges = new_ranges
+    # print(old_ranges)
 
 
 if __name__ == '__main__':
