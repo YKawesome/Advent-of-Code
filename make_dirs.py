@@ -1,11 +1,30 @@
 import os
+from datetime import datetime
+import pytz
 
-os.makedirs('Day 08')
-open('Day 08/day8input.txt', 'w').close()
-open('Day 08/day8test.txt', 'w').close()
 
-os.makedirs('Day 08/Part 1')
-os.makedirs('Day 08/Part 2')
+def _get_day() -> int:
+    '''Returns the current day in EST.'''
+    now_utc = datetime.utcnow()
+    est_timezone = pytz.timezone('America/New_York')
+    now_est = est_timezone.fromutc(now_utc)
+    return now_est.day
 
-open('Day 08/Part 1/day8.py', 'w').close()
-open('Day 08/Part 2/day8.py', 'w').close()
+
+def run() -> None:
+    '''Creates the directories for the current day.'''
+    day = str(_get_day())
+
+    os.makedirs(f'Day 0{day}')
+    open(f'Day 0{day}/day{day}input.txt', 'w').close()
+    open(f'Day 0{day}/day{day}test.txt', 'w').close()
+
+    os.makedirs(f'Day 0{day}/Part 1')
+    os.makedirs(f'Day 0{day}/Part 2')
+
+    open(f'Day 0{day}/Part 1/day{day}.py', 'w').close()
+    open(f'Day 0{day}/Part 2/day{day}.py', 'w').close()
+
+
+if __name__ == '__main__':
+    run()
