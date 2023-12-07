@@ -79,6 +79,5 @@ def run() -> None:
     print(mid)
 
 
-
 if __name__ == '__main__':
     run()
