@@ -42,51 +42,42 @@ def get_seeds(lines: list) -> list[range]:
     return ranges
 
 
-def get_ranges(mappings_list: list[Mapping], old_ranges: list[range]) -> list[range]:
-    '''Returns a list of ranges'''
-    ranges = []
-    remainders = []
+def map_location_to_seed(location: int, mappings: list[list[Mapping]]) -> int:
+    '''Maps a location to a seed'''
+    for m in reversed(mappings):
+        for mapping in m:
+            if mapping.dest_range_start <= location <= mapping.dest_range_start + mapping.range_length:
+                location -= mapping.dest_range_start - mapping.source_range_start
+                break
+    return location
 
-    for ran in old_ranges:
-        for mapping in mappings_list:
-            offset = mapping.dest_range_start - mapping.source_range_start
-            if ran.start >= mapping.source_range_start and ran.stop <= mapping.source_range_start + mapping.range_length:
-                ranges.append(range(ran.start + offset, ran.stop + offset))
-            elif ran.start < mapping.source_range_start and ran.stop < mapping.source_range_start:
-                remainders.append(range(ran.start, ran.stop))
-            elif ran.start > mapping.source_range_start + mapping.range_length and ran.stop > mapping.source_range_start + mapping.range_length:
-                remainders.append(range(ran.start, ran.stop))
-            elif ran.start < mapping.source_range_start and ran.stop > mapping.source_range_start + mapping.range_length:
-                ranges.append(range(mapping.source_range_start + offset, mapping.source_range_start + mapping.range_length + offset))
-                remainders.append(range(ran.start, mapping.source_range_start))
-                remainders.append(range(mapping.source_range_start + mapping.range_length, ran.stop))
-            elif ran.start > mapping.source_range_start and ran.stop > mapping.source_range_start + mapping.range_length:
-                ranges.append(range(ran.start + offset, mapping.source_range_start + mapping.range_length + offset))
-                remainders.append(range(mapping.source_range_start + mapping.range_length, ran.stop))
-            elif ran.start < mapping.source_range_start and ran.stop < mapping.source_range_start + mapping.range_length:
-                ranges.append(range(mapping.source_range_start + offset, ran.stop + offset))
-                remainders.append(range(ran.start, mapping.source_range_start))
-    if ranges == []:
-        return old_ranges
-    return ranges
+
+def check_valid_location(location: int, seedranges: list[range], mappings: list[list[Mapping]]) -> bool:
+    '''Checks if a location is valid'''
+    for r in seedranges:
+        if map_location_to_seed(location, mappings) in r:
+            return True
+    return False
 
 
 def run() -> None:
     '''Runs the program'''
-    with open('Day 05/day5test.txt', 'r') as f:
+    with open('Day 05/day5input.txt', 'r') as f:
         data = f.read().splitlines()
 
     seeds = get_seeds(data)
     data = process_data(data)
 
-    # seed_to_soil = data[0]
+    low = 0
+    high = 1_000_000_00
+    while low < high:
+        mid = (low + high) // 2
+        if check_valid_location(mid, seeds, data):
+            high = mid
+        else:
+            low = mid + 1
+    print(mid)
 
-    old_ranges = seeds
-    for mappings in data:
-        print(old_ranges)
-        new_ranges = get_ranges(mappings, old_ranges)
-        old_ranges = new_ranges
-    # print(old_ranges)
 
 
 if __name__ == '__main__':
