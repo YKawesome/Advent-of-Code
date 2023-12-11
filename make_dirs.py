@@ -14,16 +14,17 @@ def _get_day() -> int:
 def run() -> None:
     '''Creates the directories for the current day.'''
     day = str(_get_day())
+    day = day if len(day) == 2 else '0' + day
 
     os.makedirs(f'Day 0{day}')
-    open(f'Day 0{day}/day{day}input.txt', 'w').close()
-    open(f'Day 0{day}/day{day}test.txt', 'w').close()
+    open(f'Day {day}/day{day}input.txt', 'w').close()
+    open(f'Day {day}/day{day}test.txt', 'w').close()
 
-    os.makedirs(f'Day 0{day}/Part 1')
-    os.makedirs(f'Day 0{day}/Part 2')
+    os.makedirs(f'Day {day}/Part 1')
+    os.makedirs(f'Day {day}/Part 2')
 
-    open(f'Day 0{day}/Part 1/day{day}.py', 'w').close()
-    open(f'Day 0{day}/Part 2/day{day}.py', 'w').close()
+    open(f'Day {day}/Part 1/day{day}.py', 'w').close()
+    open(f'Day {day}/Part 2/day{day}.py', 'w').close()
 
 
 if __name__ == '__main__':
