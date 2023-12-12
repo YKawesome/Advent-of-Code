@@ -16,7 +16,7 @@ def run() -> None:
     day = str(_get_day())
     day = day if len(day) == 2 else '0' + day
 
-    os.makedirs(f'Day 0{day}')
+    os.makedirs(f'Day {day}')
     open(f'Day {day}/day{day}input.txt', 'w').close()
     open(f'Day {day}/day{day}test.txt', 'w').close()
 
