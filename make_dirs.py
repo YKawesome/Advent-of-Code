@@ -11,10 +11,11 @@ def _get_day() -> int:
     return now_est.day
 
 
-def run() -> None:
+def run(day=None) -> None:
     '''Creates the directories for the current day and writes the required lines to Python files.'''
-    day = str(_get_day())
-    day = day if len(day) == 2 else '0' + day
+    if not day:
+        day = str(_get_day())
+        day = day if len(day) == 2 else '0' + day
 
     # Create directories and files
     os.makedirs(f'Day {day}', exist_ok=True)
@@ -49,4 +50,8 @@ if __name__ == '__main__':
 
 
 if __name__ == '__main__':
-    run()
+    d = input('Enter the day number [blank for auto]: ')
+    if d == '':
+        run()
+    else:
+        run(d)
