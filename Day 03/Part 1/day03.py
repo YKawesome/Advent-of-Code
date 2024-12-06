@@ -11,24 +11,12 @@ def extract_lines(file) -> list[str]:
 
 def main(file) -> int:
     lines = extract_lines(file)
-    line = ''.join(lines)
     total = 0
 
-    words = re.findall(r"mul\(\d+,\d+\)|do\(\)|don't\(\)", line)
-    for i in range(len(words)):
-        if 'mul' in words[i]:
-            a, b = map(int, re.findall(r"\d+", words[i]))
-            words[i] = a * b
-
-    print(words)
-    do = True
-    for item in words:
-        if item == 'do()':
-            do = True
-        elif item == "don't()":
-            do = False
-        elif do:
-            total += item
+    for line in lines:
+        words = re.findall(r'mul\(\d+,\d+\)', line)
+        words = [[int(x) for x in w[4:-1].split(',')] for w in words]
+        total += sum([x * y for x, y in words])
 
     return total
 
