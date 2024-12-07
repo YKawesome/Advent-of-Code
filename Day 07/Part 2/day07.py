@@ -4,20 +4,6 @@ TEST_INPUT = 'Day 07/day07test.txt'
 INPUT = 'Day 07/day07input.txt'
 
 
-# def add(a: int, b: int) -> int:
-#     return a + b
-
-
-# def mul(a: int, b: int) -> int:
-#     return a * b
-
-
-# OPERATORS = {
-#     'add': add,
-#     'mul': mul
-# }
-
-
 def extract_lines(file) -> list[str]:
     with open(file, 'r') as f:
         return [line.strip() for line in f.read().splitlines()]
