@@ -33,8 +33,8 @@ def run(day=None) -> None:
 INPUT = 'Day {day}/day{day}input.txt'
 
 
-def main(file) -> None:
-    pass
+def main(file) -> str:
+    return ""
 
 
 if __name__ == '__main__':
